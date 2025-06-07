@@ -1,0 +1,30 @@
+/* Grid */
+
+.body {
+    display: grid;
+    grid-template-columns: (3, 1fr);
+}
+
+
+.nav-header{
+    background-color: rgb(175, 175, 248);
+    display: grid;
+    grid-template-areas: nh;
+}
+
+.panel-asistencia {
+    background-color: beige;
+    grid-template-areas: sb;
+}
+
+.registro-alumno {
+    background-color: blueviolet;
+}
+.lista-alumnos-registrados {
+    background-color: chocolate;
+}
+
+.footer {
+    background-color: cadetblue;
+    grid-template-areas: foot;
+}

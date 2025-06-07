@@ -1,0 +1,109 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text">
+    <datalist id="horas">
+        <option value="10:11"></option>
+        <option value="14:11"></option>
+    </datalist>
+<div id="file">2</div>
+
+<input type="file" accept="image" capture="user">
+<input type="file" accept="video" capture="environment">
+
+<dialog class="dialog">
+    <button autofocus>cerrar</button>
+    <p>holas a todos</p>
+    <p>yo soy el leon ruigio la bestia en mefio de la avenida</p>
+</dialog>
+
+<details>
+    <summary>menu</summary>
+    <li>s
+        <a href="#horas">s</a>
+    </li>
+    <li>men</li>
+    <li>men</li>
+</details>
+
+<button popovertarget="pop">abrir</button>
+
+<div popover id="pop">
+    <h1>aosdnaoisndoaisndoainsoisand</h1>
+</div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Asistencia App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="login-container">
+    <h1>Login</h1>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Usuario" required>
+      <input type="password" id="password" placeholder="Contraseña" required>
+      <button type="submit">Ingresar</button>
+    </form>
+    <p>¿No tienes cuenta? <a href="#" id="show-register">Regístrate</a></p>
+  </div>
+
+  <div class="register-container hidden">
+    <h1>Registro</h1>
+    <form id="register-form">
+      <input type="text" id="new-username" placeholder="Usuario" required>
+      <input type="password" id="new-password" placeholder="Contraseña" required>
+      <button type="submit">Registrarse</button>
+    </form>
+    <p>¿Ya tienes cuenta? <a href="#" id="show-login">Inicia sesión</a></p>
+  </div>
+
+  <script>
+    const loginContainer = document.querySelector('.login-container');
+    const registerContainer = document.querySelector('.register-container');
+
+    document.getElementById('show-register').addEventListener('click', () => {
+      loginContainer.classList.add('hidden');
+      registerContainer.classList.remove('hidden');
+    });
+
+    document.getElementById('show-login').addEventListener('click', () => {
+      registerContainer.classList.add('hidden');
+      loginContainer.classList.remove('hidden');
+    });
+
+    document.getElementById('register-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const user = document.getElementById('new-username').value;
+      const pass = document.getElementById('new-password').value;
+      localStorage.setItem('user', JSON.stringify({ user, pass }));
+      alert('Usuario registrado. Puedes iniciar sesión.');
+      registerContainer.classList.add('hidden');
+      loginContainer.classList.remove('hidden');
+    });
+
+    document.getElementById('login-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const saved = JSON.parse(localStorage.getItem('user'));
+      if (saved && saved.user === user && saved.pass === pass) {
+        localStorage.setItem('loggedIn', 'true');
+        window.location.href = 'index.html';
+      } else {
+        alert('Usuario o contraseña incorrectos.');
+      }
+    });
+  </script>
+</body>
+</html>

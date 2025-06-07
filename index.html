@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio - Asistencia App</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <h1>Panel de Asistencia</h1>
+  <button id="logout">Cerrar sesión</button>
+
+  <section class="panel-asistencia">
+    <h2>Crear Materia</h2>
+    <form id="class-form">
+      <input type="text" id="class-name" placeholder="Nombre de la Materia" required>
+      <button type="submit">Agregar Materia</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Materias</h2>
+    <ul id="class-list"></ul>
+  </section>
+
+  <section id="student-section" class="hidden">
+    <h2>Alumnos de: <span id="selected-class"></span></h2>
+    <form id="student-form">
+      <input type="text" id="student-name" placeholder="Nombre del alumno" required>
+      <button type="submit">Agregar Alumno</button>
+    </form>
+    <ul id="student-list"></ul>
+  </section>
+
+  <script>
+    
+
+
+    // if (localStorage.getItem('loggedIn') !== 'true') {
+    //   window.location.href = 'login.html';
+    // }
+
+    // document.getElementById('logout').addEventListener('click', () => {
+    //   localStorage.setItem('loggedIn', 'false');
+    //   window.location.href = 'login.html';
+    // });
+
+    // const classForm = document.getElementById('class-form');
+    // const classList = document.getElementById('class-list');
+    // const studentSection = document.getElementById('student-section');
+    // const studentForm = document.getElementById('student-form');
+    // const studentList = document.getElementById('student-list');
+    // const selectedClassSpan = document.getElementById('selected-class');
+
+    // let classes = JSON.parse(localStorage.getItem('classes')) || {};
+    // let selectedClass = null;
+
+    // function saveClasses() {
+    //   localStorage.setItem('classes', JSON.stringify(classes));
+    // }
+
+    // function renderClasses() {
+    //   classList.innerHTML = '';
+    //   Object.keys(classes).forEach(className => {
+    //     const li = document.createElement('li');
+    //     li.textContent = className;
+    //     li.addEventListener('click', () => {
+    //       selectedClass = className;
+    //       selectedClassSpan.textContent = className;
+    //       renderStudents();
+    //       studentSection.classList.remove('hidden');
+    //     });
+    //     classList.appendChild(li);
+    //   });
+    // }
+
+    // function renderStudents() {
+    //   studentList.innerHTML = '';
+    //   const students = classes[selectedClass] || [];
+    //   students.forEach((student, index) => {
+    //     const li = document.createElement('li');
+    //     const checkbox = document.createElement('input');
+    //     checkbox.type = 'checkbox';
+    //     checkbox.checked = student.present;
+    //     checkbox.addEventListener('change', () => {
+    //       classes[selectedClass][index].present = checkbox.checked;
+    //       saveClasses();
+    //     });
+    //     li.textContent = student.name;
+    //     li.prepend(checkbox);
+    //     studentList.appendChild(li);
+    //   });
+    // }
+
+    // classForm.addEventListener('submit', e => {
+    //   e.preventDefault();
+    //   const className = document.getElementById('class-name').value;
+    //   if (!classes[className]) {
+    //     classes[className] = [];
+    //     saveClasses();
+    //     renderClasses();
+    //     classForm.reset();
+    //   } else {
+    //     alert('La clase ya existe.');
+    //   }
+    // });
+
+    // studentForm.addEventListener('submit', e => {
+    //   e.preventDefault();
+    //   const studentName = document.getElementById('student-name').value;
+    //   if (selectedClass) {
+    //     classes[selectedClass].push({ name: studentName, present: false });
+    //     saveClasses();
+    //     renderStudents();
+    //     studentForm.reset();
+    //   }
+    // });
+
+    // renderClasses();
+    // Si no está logueado, ir al login
+  if (localStorage.getItem('loggedIn') !== 'true') {
+    window.location.href = 'login.html';
+  }
+
+  // Botón para cerrar sesión
+  document.getElementById('logout').onclick = function () {
+    localStorage.setItem('loggedIn', 'false');
+    window.location.href = 'login.html';
+  };
+
+  // Referencias a elementos del HTML
+  const classForm = document.getElementById('class-form');
+  const classList = document.getElementById('class-list');
+  const studentSection = document.getElementById('student-section');
+  const studentForm = document.getElementById('student-form');
+  const studentList = document.getElementById('student-list');
+  const selectedClassSpan = document.getElementById('selected-class');
+
+  // Obtener clases desde localStorage o crear objeto vacío
+  let classes = JSON.parse(localStorage.getItem('classes')) || {};
+  let selectedClass = null;
+
+  // Mostrar lista de clases
+  function showClasses() {
+    classList.innerHTML = '';
+    for (let name in classes) {
+      let li = document.createElement('li');
+      li.textContent = name;
+      li.onclick = function () {
+        selectedClass = name;
+        selectedClassSpan.textContent = name;
+        studentSection.classList.remove('hidden');
+        showStudents();
+      };
+      classList.appendChild(li);
+    }
+  }
+
+  // Mostrar estudiantes de la clase seleccionada
+  function showStudents() {
+    studentList.innerHTML = '';
+    let students = classes[selectedClass];
+    for (let i = 0; i < students.length; i++) {
+      let student = students[i];
+      let li = document.createElement('li');
+      let checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = student.present;
+      checkbox.onchange = function () {
+        student.present = checkbox.checked;
+        localStorage.setItem('classes', JSON.stringify(classes));
+      };
+      li.textContent = student.name;
+      li.prepend(checkbox);
+      studentList.appendChild(li);
+    }
+  }
+
+  // Agregar clase nueva
+  classForm.onsubmit = function (e) {
+    e.preventDefault();
+    let name = document.getElementById('class-name').value;
+    if (!classes[name]) {
+      classes[name] = [];
+      localStorage.setItem('classes', JSON.stringify(classes));
+      showClasses();
+      classForm.reset();
+    } else {
+      alert('La clase ya existe.');
+    }
+  };
+
+  // Agregar estudiante nuevo
+  studentForm.onsubmit = function (e) {
+    e.preventDefault();
+    let name = document.getElementById('student-name').value;
+    if (selectedClass) {
+      classes[selectedClass].push({ name: name, present: false });
+      localStorage.setItem('classes', JSON.stringify(classes));
+      showStudents();
+      studentForm.reset();
+    }
+  };
+
+  // Mostrar clases al cargar
+  showClasses();
+    
+  </script>
+</body>
+</html>
